@@ -1,3 +1,5 @@
+import { AstPrinter } from "./expression";
+import { Parser } from "./parser";
 import { Scanner } from "./scanner";
 
 export class Lox {
@@ -11,11 +13,22 @@ export class Lox {
 
 const main = () => {
 
-  const source = '(){} != == === "hello, world" 34 == 74.54'
+  const source = '3 + 4 * (2 - 1)'
   const scanner = new Scanner(source);
-
   const tokens = scanner.scanTokens();
-  tokens.map(token => console.log(token.toString()))
+
+  const parser = new Parser(tokens);
+  const expressions = parser.parse();
+  console.log("=== Parser === \n ");
+
+  if (expressions == null) {
+    console.error("Null");
+    return;
+  }
+
+  const printer = new AstPrinter();
+  const result = printer.print(expressions);
+  console.log(result);
 }
 
 main();
